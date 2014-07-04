@@ -1,5 +1,5 @@
 #include <xbee.h>
-
+#include <Stewitter.h>
 #include <SoftwareSerial.h>
 
 /* Arduino Forced Ventilation Box Server
@@ -29,6 +29,9 @@ const unsigned int TW_BUFFER_SIZE = 128;
 char timeStr[TW_BUFFER_SIZE];
 char dataStr[384];
 
+Stewitter twitter("f9a13cdffca05042a00a5f5d9ae39b22");
+
+
 SoftwareSerial Xbee(3,2);
 
 byte dev_gpio_A[] = {0x00,0x13,0xA2,0x00,0x40,0x64,0xF1,0x40};
@@ -39,7 +42,7 @@ double rh_A;
 double temp_B;
 double rh_B;
 
-int	seq = 5000; 
+int	seq = 30000; 
 
 
 
@@ -100,6 +103,9 @@ void fan_ON(){
 
 
 void loop(){
+
+		delay(1000);
+
 		memset(timeStr,0,sizeof(timeStr));
 		memset(dataStr,0,sizeof(dataStr));
 
@@ -109,6 +115,8 @@ void loop(){
 		makeDataStr(dataStr);
 		strcat(dataStr,timeStr);
 
+		(twitter.post(dataStr));
+		
 		fan_ON();
 
 		delay(seq);
