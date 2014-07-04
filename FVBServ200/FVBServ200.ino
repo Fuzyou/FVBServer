@@ -41,7 +41,7 @@ double rh_A;
 double temp_B;
 double rh_B;
 
-int	seq = 30000; 
+int	seq = 3000;
 
 
 
@@ -102,22 +102,37 @@ void fan_ON(){
 
 
 void loop(){
+		
+		temp_A = 0;
+		temp_B = 0;
+		rh_A = 0;
+		rh_B = 0;
+
+		getTime();
+		
+		int	time_now = minute() ;
+
+		if( 6 <= time_now && time_now<=35){ 
+		xbee_end_device(dev_gpio_A, 28, 0, 0);
+		Serial.println("Xbees are Sleeping");
+		}
+		if( 36 <= time_now && time_now <= 59){
+				Serial.println("Xbee wake UP");
+		fan_ON();
 
 		delay(1000);
 
 		memset(timeStr,0,sizeof(timeStr));
 		memset(dataStr,0,sizeof(dataStr));
 
-		getTime();
 		makeTimeStr(timeStr);
 		get_data();
 		makeDataStr(dataStr);
 		strcat(dataStr,timeStr);
-
-		(twitter.post(dataStr));
-		
-		fan_ON();
-
+		Serial.println(dataStr);
+		//(twitter.post(dataStr));
+		}
+		debug();
 		delay(seq);
 }
 
