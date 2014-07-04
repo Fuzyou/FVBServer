@@ -31,7 +31,6 @@ char dataStr[384];
 
 Stewitter twitter("f9a13cdffca05042a00a5f5d9ae39b22");
 
-
 SoftwareSerial Xbee(3,2);
 
 byte dev_gpio_A[] = {0x00,0x13,0xA2,0x00,0x40,0x64,0xF1,0x40};
