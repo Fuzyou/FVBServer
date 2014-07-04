@@ -101,27 +101,15 @@ void fan_ON(){
 
 void loop(){
 		memset(timeStr,0,sizeof(timeStr));
-		Serial.print("timeStr = ");
-		Serial.println(timeStr);
 		memset(dataStr,0,sizeof(dataStr));
-		Serial.print("dataStr = ");
-		Serial.println(dataStr);
+
 		getTime();
 		makeTimeStr(timeStr);
-		Serial.println(timeStr);
 		get_data();
 		makeDataStr(dataStr);
 		strcat(dataStr,timeStr);
-		Serial.println(dataStr);
 
 		fan_ON();
-
-
-		debug();	
-		debug();
-
-
-
 
 		delay(seq);
 }
