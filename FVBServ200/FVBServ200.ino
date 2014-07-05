@@ -41,8 +41,7 @@ double rh_A;
 double temp_B;
 double rh_B;
 
-int	seq = 30000; 
-
+int	seq = 3000;
 
 
 void setup(){
@@ -99,25 +98,56 @@ void fan_ON(){
 		xbee_gpo(dev_gpio_A , 3 , 1 );
 }
 
+void makeXbeeSleep(){
+		xbee_end_device(dev_gpio_A, 28, 0, 0);
+		xbee_end_device(dev_gpio_B, 28, 0, 0);
+}
+
+
+void makeXbeeWakeup(){
+		xbee_rat(dev_gpio_A, "ATSM00");
+		xbee_rat(dev_gpio_B, "ATSM00");
+}
 
 
 void loop(){
 
-		delay(1000);
-
-		memset(timeStr,0,sizeof(timeStr));
-		memset(dataStr,0,sizeof(dataStr));
+		temp_A = 0;
+		temp_B = 0;
+		rh_A = 0;
+		rh_B = 0;
 
 		getTime();
-		makeTimeStr(timeStr);
-		get_data();
-		makeDataStr(dataStr);
-		strcat(dataStr,timeStr);
 
-		(twitter.post(dataStr));
-		
-		fan_ON();
+		int	time_now = minute() ;
 
+		if( 6 == time_now ){ 
+				
+				makeXbeeSleep();
+
+				Serial.println("Make Xbee sleep");
+		}
+		else if( 0 <= time_now && time_now <= 5)
+		{
+				makeXbeeWakeup();
+
+				Serial.println("Xbee wake UP");
+
+				fan_ON();
+
+				memset(timeStr,0,sizeof(timeStr));
+				memset(dataStr,0,sizeof(dataStr));
+
+				makeTimeStr(timeStr);
+				get_data();
+				makeDataStr(dataStr);
+				strcat(dataStr,timeStr);
+				Serial.println(dataStr);
+				//(twitter.post(dataStr));
+		}else{
+				Serial.println("Xbee are sleeping");
+		}
+		debug();
 		delay(seq);
 }
 
